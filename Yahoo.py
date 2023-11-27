@@ -5,11 +5,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 
 
-
-PREVIOUS_CLOSE_XPATH = '//*[@id="nimbus-app"]/section/section/section/article/div[2]/ul/li[1]/span[2]/fin-streamer'
-
-
-
+PREVIOUS_CLOSE_SELECTOR = '#quote-summary [data-test="PREV_CLOSE-value"]'
+OPEN_SELECTOR =  '#quote-summary [data-test="OPEN-value"]'
+DAYS_RANGE_SELECTOR = '#quote-summary [data-test="DAYS_RANGE-value"]'
 
 class Stock:
     def __init__(self, ticker):
@@ -32,28 +30,27 @@ class Stock:
 
         #Sets Previous Close of Stock
         #self.previous_close = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,PREVIOUS_CLOSE_XPATH)))
-        self.previous_close = driver.find_element(By.CSS_SELECTOR, '#quote-summary [data-test="PREV_CLOSE-value"]').text
+        self.previous_close = driver.find_element(By.CSS_SELECTOR, PREVIOUS_CLOSE_SELECTOR).text
 
         self.regular_market_price = driver\
         .find_element(By.CSS_SELECTOR, f'[data-symbol="{self.ticker_symbol}"][data-field="regularMarketPrice"]')\
         .text
 
-        self.open = driver.find_element(By.CSS_SELECTOR, '#quote-summary [data-test="OPEN-value"]').text
-        self.days_range = driver.find_element(By.CSS_SELECTOR, '#quote-summary [data-test="DAYS_RANGE-value"]').text
+        self.open = driver.find_element(By.CSS_SELECTOR, OPEN_SELECTOR).text
+        self.days_range = driver.find_element(By.CSS_SELECTOR, DAYS_RANGE_SELECTOR).text
         #driver.close()
 
 
-ticker_stocks = ["AMZN","AAPL","SHOP","ROKU"]
-
 
 options = Options()
+options.add_argument("--window-size=1920x1080") 
+options.add_argument("--verbose")
+#options.add_argument("--headless")
 
 driver = webdriver.Chrome(options=options)
 
 
-tesla = Stock("TSLA")
-tesla.scrape_data(driver)
-print(tesla)
+ticker_stocks = ["TSLA","AMZN","AAPL","SHOP","ROKU"]
 
 for ticker in ticker_stocks:
     S = Stock(ticker)
